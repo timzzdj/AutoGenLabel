@@ -1,0 +1,27 @@
+﻿<Window x:Class="AutoGenLabel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="370" Width="600"
+        ResizeMode="NoResize"
+        WindowStyle="SingleBorderWindow">
+    <Grid x:Name="grd_mainwindow">
+        <TextBlock Margin="173,25,329,289" Text="FG PN:" RenderTransformOrigin="0.739,0.501"/>
+        <TextBox x:Name="txt_partNumber" Margin="225,25,97,289" AcceptsReturn="True"/>
+        <TextBlock Margin="134,55,358,259" Text="Unit Label PN:"/>
+        <TextBox x:Name="txt_itemNumberUnit" Margin="225,55,97,260"/>
+        <TextBlock Margin="117,80,360,234" Text="Intrmdt. Label PN:"/>
+        <TextBox x:Name="txt_itemNumberIntermediate" Margin="225,80,97,234"/>
+        <TextBlock Margin="134,109,343,205" Text="Ship Label PN:"/>
+        <TextBox x:Name="txt_itemNumberShip" Margin="225,109,97,205"/>
+        <ComboBox x:Name="Cmb_unitSize" Margin="226,154,96,157"
+                  SelectionChanged="Cmb_unitSize_SelectionChanged" />
+        <TextBlock Margin="127,157,314,155" Text="Unit Label Size:"/>
+        <ComboBox x:Name="Cmb_shipSize" Margin="225,195,97,116" 
+                  SelectionChanged="Cmb_shipSize_SelectionChanged"/>
+        <TextBlock Margin="127,198,314,114" Text="Ship Label Size:"/>
+        <ComboBox x:Name="Cmb_intermediateSize" Margin="225,236,96,75"
+                  SelectionChanged="Cmb_intermediateSize_SelectionChanged"/>
+        <TextBlock Margin="85,237,314,75" Text="Intermediate Label Size:"/>
+        <Button x:Name="Btn_print" Content="Print Label" Margin="326,278,97,32" Click="Btn_print_Click"/>
+    </Grid>
+</Window>
