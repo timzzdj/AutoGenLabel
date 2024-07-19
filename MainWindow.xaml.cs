@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using NiceLabel.SDK;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace AutoGenLabel
 {
@@ -17,8 +19,9 @@ namespace AutoGenLabel
         ArenaAPI arenaAPI;
         Connector connector;
         LoftwareAPI loftwareAPI;
-        private string destinationPath = "N:\\MechanicalEngineering\\Packaging\\NiceLabel\\PDFLabels";
-        private string unitLabelPath = "";
+        private bool is_requestFinished = false;
+        private string destinationPath = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabel";
+        private string unitLabelPath = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabel\\22092r2 Ship Label Format 5.00 x 3.50.nlbl";
         private string unitLBLSize = "";
         private string intrmdtLabelPath = "";
         private string intrmdtLBLSize = "";
@@ -30,6 +33,7 @@ namespace AutoGenLabel
             this.InitializeComponent();
 
             arenaAPI = new ArenaAPI();
+            LoginArena();
             connector = new Connector();
             loftwareAPI = new LoftwareAPI();
 
@@ -37,12 +41,7 @@ namespace AutoGenLabel
             PopulateShipComboBox();
             PopulateIntermediateComboBox();
         }
-        public async void GetLabelDetails()
-        {
-            string itemID = txt_partNumber.Text;
-            var itemGUID = await arenaAPI.GetGUID(itemID);
-            var itemAddAtrr = await arenaAPI.GetLabelInfo(itemGUID, connector);
-        }
+
         private void Cmb_unitSize_SelectionChanged(object sender, SelectionChangedEventArgs selectEv)
         {
             try
@@ -54,7 +53,7 @@ namespace AutoGenLabel
                     unitLBLSize = selectedItem;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -108,11 +107,95 @@ namespace AutoGenLabel
             Cmb_intermediateSize.ItemsSource = items;
             Cmb_intermediateSize.SelectedIndex = 0;
         }
-        private void Btn_print_Click(object sender, RoutedEventArgs e)
+        private async void LoginArena()
         {
-            GetLabelDetails();
-            loftwareAPI.GetLabel(unitLabelPath); // setup path to label template
-            loftwareAPI.PrintLabels(connector, destinationPath);
+            var is_loginSuccessful = false;
+            try
+            {
+                is_loginSuccessful = await arenaAPI.LoginAsync();
+                Thread.Sleep(3000);
+                if (!is_loginSuccessful)
+                {
+                    MessageBox.Show("Please See Credential File if your input is correct.", "Login to Arena failed");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
+            is_requestFinished = is_loginSuccessful;
+        }
+        public async Task<string> GetGUID()
+        {
+            var itemGUID = "";
+            try
+            {
+                string itemID = txt_partNumber.Text;
+                itemGUID = await arenaAPI.GetGUID(itemID);
+                await Task.Delay(3000);
+                return itemGUID;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
+            return itemGUID;
+        }
+        public async void GetLabelDetails(string GUID)
+        {
+            var itemAddAttr = "";
+            try
+            {
+                itemAddAttr = await arenaAPI.GetLabelInfo(GUID, connector);
+                await Task.Delay(3000);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
+            return;
+        }
+        public async void GetLabelTemplate()
+        {
+            try
+            {
+                loftwareAPI.GetLabel(unitLabelPath); // setup path to label template
+                await Task.Delay(3000);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
+            return;
+        }
+        public async void PrintLabel()
+        {
+            try
+            {
+                loftwareAPI.PrintLabels(connector, destinationPath);
+                await Task.Delay(3000);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
+        }
+        private async void Btn_print_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var itemGuid = await GetGUID();
+                await Task.Delay(3000);
+                GetLabelDetails(itemGuid);
+                await Task.Delay(3000);
+                GetLabelTemplate();
+                await Task.Delay(3000);
+                PrintLabel();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
         }
         protected override async void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
