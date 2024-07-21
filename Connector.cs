@@ -35,15 +35,15 @@ namespace AutoGenLabel
                 var guid = attributes["guid"]?.ToString();
                 var value = attributes["value"].ToString();
 
-                if(guid == GUID_unitUPC)
+                if (guid == GUID_unitUPC)
                     UnitUPC = value;
-                else if(guid == GUID_shipUPC)
+                else if (guid == GUID_shipUPC)
                     ShipUPC = value;
-                else if(guid == GUID_businessunit)
+                else if (guid == GUID_businessunit)
                     BusinessUnit = value;
-                else if(guid == GUID_COO)
+                else if (guid == GUID_COO)
                     CountryOfOrigin = value;
-                else if(guid == GUID_masterqty) 
+                else if (guid == GUID_masterqty)
                     MasterCartonQty = value;
             }
 
@@ -54,11 +54,12 @@ namespace AutoGenLabel
         }
         public ILabel SetLabelVariables(ILabel item_label)
         {
-            item_label.Variables["Catalog Number"].SetValue(CatalogNumber);
-            item_label.Variables["Description"].SetValue(CatalogDescription);
+            item_label.Variables["catalogNumber"].SetValue(CatalogNumber);
+            item_label.Variables["descriptionLine1ENG"].SetValue(CatalogDescription);
             item_label.Variables["COO"].SetValue(CountryOfOrigin);
-            item_label.Variables["Unit UPC"].SetValue(UnitUPC);
-            item_label.Variables["Master UPC"].SetValue(ShipUPC);
+            //item_label.Variables["unitLabelUPC"].SetValue(UnitUPC);
+            item_label.Variables["shipLabelUPC"].SetValue(ShipUPC);
+            item_label.Variables["shipQuantity"].SetValue(MasterCartonQty);
 
             return item_label;
         }
