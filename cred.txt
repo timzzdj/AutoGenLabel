@@ -1,2 +1,2 @@
-email@emailhere.com
-passwordhere123
+email@email.com
+password123
