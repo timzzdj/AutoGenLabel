@@ -20,8 +20,8 @@ namespace AutoGenLabel
         Connector connector;
         LoftwareAPI loftwareAPI;
         private bool is_requestFinished = false;
-        private string destinationPath = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabel";
-        private string unitLabelPath = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabel\\22092r2 Ship Label Format 5.00 x 3.50.nlbl";
+        private string destinationPath = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabelv1";
+        private string unitLabelPath = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabelv1\\22092r2 Ship Label Format 5.00 x 3.50.nlbl";
         private string unitLBLSize = "";
         private string intrmdtLabelPath = "";
         private string intrmdtLBLSize = "";
