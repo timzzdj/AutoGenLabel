@@ -16,6 +16,7 @@ namespace AutoGenLabel
         private ILabel new_label;
         public LoftwareAPI()
         {
+            // Start Initialization of SDK Print Engine
             InitializePrintEngine();
         }
         public void InitializePrintEngine()
@@ -30,9 +31,9 @@ namespace AutoGenLabel
             {
                 print_engine.Initialize();
             }
-            catch(SDKException sdkEx)
+            catch (SDKException sdkEx)
             {
-                MessageBox.Show($"{sdkEx.ErrorCode}: {sdkEx.Message}\n{sdkEx.DebugMessage}" , $"SDK Exception: {sdkEx.DetailedErrorCode}");
+                MessageBox.Show($"{sdkEx.ErrorCode}: {sdkEx.Message}\n{sdkEx.DebugMessage}", $"SDK Exception: {sdkEx.DetailedErrorCode}");
             }
         }
         public ILabel GetLabel(string label_template)
@@ -45,7 +46,7 @@ namespace AutoGenLabel
             new_label = connector.SetLabelVariables(new_label);
 
             IPrintSettings print_settings = new_label.PrintSettings;
-            destination_path = "N:\\MechanicalEngineering\\Packaging\\NiceLabel\\PDFLabels";
+            destination_path = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabel\\";
 
             print_settings.PrinterName = "Microsoft Print to PDF";
             print_settings.PrintToPdf = true;
