@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 using System.Windows;
 using System.IO;
+using System.Threading;
 
 namespace AutoGenLabel
 {
@@ -41,21 +42,30 @@ namespace AutoGenLabel
         }
         public async Task<bool> LoginAsync()
         {
-            var loginData = new
+            try
             {
-                email = this.email,
-                password = this.password
-            };
+                var loginData = new
+                {
+                    email = this.email,
+                    password = this.password
+                };
 
-            var loginResponse = await PostRequest("https://api.arenasolutions.com/v1/login", loginData);
+                var loginResponse = await PostRequest("https://api.arenasolutions.com/v1/login", loginData);
 
-            if (loginResponse != null && loginResponse["arenaSessionId"] != null)
-            {
-                arenaSessionId = loginResponse["arenaSessionId"].ToString();
-                http_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", arenaSessionId);
-                return true;
+                if (loginResponse != null && loginResponse["arenaSessionId"] != null)
+                {
+                    arenaSessionId = loginResponse["arenaSessionId"].ToString();
+                    http_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", arenaSessionId);
+                    return true;
+                }
+                else
+                    return false;
             }
-            return false;
+            catch (Exception ex)
+            {
+                MessageBox.Show("Request Failed Error: " + ex.Message, ex.StackTrace);
+                return false;
+            }
         }
         private async Task<JObject> PostRequest(string url, object data)
         {
@@ -81,25 +91,35 @@ namespace AutoGenLabel
         public async Task<string> GetGUID(string FG_PN)
         {
             //var url = "https://api.arenasolutions.com/v1/items?CUEX2SIHUM3L4N253I96=Encelium&category.guid=0I2LQG65IAT3M5HO1ZUR&limit=400";
-            var url = $"https://api.arenasolutions.com/v1/items?number={FG_PN}";
-            var response = await http_client.GetAsync(url);
+            var url = "";
+            HttpResponseMessage response;
+            try
+            {
+                url = $"https://api.arenasolutions.com/v1/items?number={FG_PN}";
+                response = await http_client.GetAsync(url);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var jsonresponse = await response.Content.ReadAsStringAsync();
-                var parsedResponse = JObject.Parse(jsonresponse);
-                var itemGUID = parsedResponse["results"]?[0]?["guid"]?.ToString();
-                return itemGUID ?? "Item GUID not found";
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonresponse = await response.Content.ReadAsStringAsync();
+                    var parsedResponse = JObject.Parse(jsonresponse);
+                    var itemGUID = parsedResponse["results"]?[0]?["guid"]?.ToString();
+                    return itemGUID ?? "Item GUID not found";
+                }
+                else
+                {
+                    MessageBox.Show("Request Failed Error: " + response.ReasonPhrase, response.StatusCode.ToString());
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Request Failed Error: " + response.ReasonPhrase, response.StatusCode.ToString());
+                MessageBox.Show("Request Failed Error: " + ex.Message, ex.StackTrace);
                 return null;
             }
         }
         public async Task<string> GetLabelInfo(string Guid, Connector connector)
         {
-            var url = $"https://api.arenasolutions.com/v1/items/${Guid}";
+            var url = $"https://api.arenasolutions.com/v1/items/{Guid}";
             var response = await http_client.GetAsync(url);
 
             if (response.IsSuccessStatusCode)
