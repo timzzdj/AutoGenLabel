@@ -26,7 +26,7 @@ namespace AutoGenLabel
         {
             try
             {
-                var line = File.ReadAllLines("C:\\Users\\dejesust\\source\\repos\\AutoGenLabel\\cred.txt");
+                var line = File.ReadAllLines("C:\\Users\\dejesust\\source\\repos\\AutoGenLabelv1\\cred.txt");
                 if (line.Length >= 2)
                 {
                     email = line[0];
