@@ -46,7 +46,7 @@ namespace AutoGenLabel
             new_label = connector.SetLabelVariables(new_label);
 
             IPrintSettings print_settings = new_label.PrintSettings;
-            destination_path = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabel\\";
+            destination_path = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabelv1\\";
 
             print_settings.PrinterName = "Microsoft Print to PDF";
             print_settings.PrintToPdf = true;
