@@ -54,15 +54,22 @@ namespace AutoGenLabel
         }
         public ILabel SetLabelVariables(ILabel item_label)
         {
-            item_label.Variables["catalogNumber"].SetValue(CatalogNumber);
-            item_label.Variables["descriptionLine1ENG"].SetValue(CatalogDescription);
+            item_label.Variables[0].SetValue(CatalogNumber);
+            item_label.Variables[1].SetValue(CatalogDescription);
             item_label.Variables["COO"].SetValue(CountryOfOrigin);
             //item_label.Variables["unitLabelUPC"].SetValue(UnitUPC);
-            item_label.Variables["shipLabelUPC"].SetValue(ShipUPC);
-            item_label.Variables["shipQuantity"].SetValue(MasterCartonQty);
+            item_label.Variables[9].SetValue(ShipUPC);
+            item_label.Variables[10].SetValue(MasterCartonQty);
 
             return item_label;
         }
+        #region
+            // Indexes
+            // catalogNumber = 0
+            // descriptionLine1ENG = 1
+            // shipLabelUPC = 9
+            // shipQuantity = 10
+        #endregion
         ~Connector() { }
     }
 }
