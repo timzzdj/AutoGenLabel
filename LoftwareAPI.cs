@@ -38,19 +38,26 @@ namespace AutoGenLabel
         }
         public ILabel GetLabel(string label_template)
         {
-            new_label = print_engine.OpenLabel(label_template);
+            try
+            {
+                new_label = print_engine.OpenLabel(label_template);
+            }
+            catch(SDKException sdkEx)
+            {
+                MessageBox.Show($"{sdkEx.ErrorCode}: {sdkEx.Message}\n{sdkEx.DebugMessage}", $"SDK Exception: {sdkEx.DetailedErrorCode}");
+            }
             return new_label;
         }
-        public void PrintLabels(Connector connector, string destination_path)
+        public void PrintLabels(Connector connector, string destination_path, string itemPN)
         {
-            new_label = connector.SetLabelVariables(new_label);
+            new_label = connector.SetLabelVariables(new_label, itemPN);
 
             IPrintSettings print_settings = new_label.PrintSettings;
-            destination_path = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabelv1\\";
-
+            //destination_path = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabelv1\\";
+            
             print_settings.PrinterName = "Microsoft Print to PDF";
             print_settings.PrintToPdf = true;
-            print_settings.OutputFileName = $"{destination_path}{Path.GetFileNameWithoutExtension(new_label.FileName)}.pdf";
+            print_settings.OutputFileName = $"{destination_path}{itemPN}_{connector.CatalogNumber}.pdf";
 
             new_label.Print(1);
         }

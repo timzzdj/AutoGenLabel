@@ -20,10 +20,13 @@ namespace AutoGenLabel
         Connector connector;
         LoftwareAPI loftwareAPI;
         private bool is_requestFinished = false;
-        private string destinationPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\PDFs");
-        private string unitLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels\");
-        private string intrmdtLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels\");
-        private string masterLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels\");
+        private string destinationPath = Path.Combine(Directory.GetCurrentDirectory(), @"PDFs\");
+        private string unitLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"Labels\");
+        private string intrmdtLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"Labels\");
+        private string masterLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"Labels\");
+        public string unitLBLPN = "LABEL_UNIT_";
+        public string intLBLPN = "LABEL_INNER_";
+        public string shipLBLPN = "LABEL_SHIP_";
         private string unitLBLSize;
         private string intrmdtLBLSize;
         private string masterLBLSize;
@@ -108,10 +111,10 @@ namespace AutoGenLabel
                 switch (comboBox.SelectedIndex)
                 {
                     case 0:
-                        masterLBLSize = masterLabelPath + "";
+                        masterLBLSize = masterLabelPath + "Ship Label Format 5.00 x 3.50.nlbl";
                         break;
                     case 1:
-                        masterLBLSize = masterLabelPath + "";
+                        masterLBLSize = masterLabelPath + "Ship Label Format 5.00 x 3.50.nlbl";
                         break;
                     case 2:
                         masterLBLSize = masterLabelPath + "Ship Label Format 2.68 x 2.00.nlbl";
@@ -227,11 +230,11 @@ namespace AutoGenLabel
             }
             return;
         }
-        public async void GetLabelTemplate()
+        public async void GetLabelTemplate(string selectedLabel_size)
         {
             try
             {
-                loftwareAPI.GetLabel(unitLabelPath); // setup path to label template
+                loftwareAPI.GetLabel(selectedLabel_size); // setup path to label template
                 await Task.Delay(3000);
             }
             catch (Exception ex)
@@ -240,11 +243,11 @@ namespace AutoGenLabel
             }
             return;
         }
-        public async void PrintLabel()
+        public async void PrintLabel(string itemPN)
         {
             try
             {
-                loftwareAPI.PrintLabels(connector, destinationPath);
+                loftwareAPI.PrintLabels(connector, destinationPath, itemPN);
                 await Task.Delay(3000);
             }
             catch (Exception ex)
@@ -260,20 +263,88 @@ namespace AutoGenLabel
                 await Task.Delay(3000);
                 GetLabelDetails(itemGuid);
                 await Task.Delay(3000);
-                GetLabelTemplate();
+                EvaluateLabelSize();
                 await Task.Delay(3000);
-                PrintLabel();
+                PrintUnitLabels();
+                await Task.Delay(3000);
+                PrintIntermediateLabel();
+                await Task.Delay(3000);
+                PrintShipLabel();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Exception caught: " + ex.Message);
             }
         }
+        private void PrintUnitLabels()
+        {
+            try
+            {
+                unitLBLPN = unitLBLPN + txt_itemNumberUnit.Text;
+                if (Cmb_unitSize.SelectedIndex != 0 && unitLBLPN != "")
+                {
+                    GetLabelTemplate(unitLBLSize);
+                    PrintLabel(unitLBLPN);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
+        }
+        private void PrintIntermediateLabel()
+        {
+            try
+            {
+                intLBLPN = intLBLPN + txt_itemNumberIntermediate.Text;
+                if (Cmb_intermediateSize.SelectedIndex != 0 && intLBLPN != "")
+                {
+                    GetLabelTemplate(intrmdtLBLSize);
+                    PrintLabel(intLBLPN);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
+        }
+        private  void PrintShipLabel()
+        {
+            try
+            {
+                shipLBLPN = shipLBLPN + txt_itemNumberShip.Text;
+                if (Cmb_shipSize.SelectedIndex != 0 && shipLBLPN != "")
+                {
+                    GetLabelTemplate(masterLBLSize);
+                    PrintLabel(shipLBLPN);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
+        }
+        private void EvaluateLabelSize()
+        {
+            try
+            {
+                if((unitLBLPN == "" && intLBLPN == "" && shipLBLPN == "")&&
+                   (Cmb_unitSize.SelectedIndex == 0 && Cmb_intermediateSize.SelectedIndex == 0 && Cmb_shipSize.SelectedIndex == 0))
+                {
+                    MessageBox.Show("Error Message: Label PN / Label Size is missing, \nPlease select a label size for each label PN entered.\nPlease enter a label PN for each label size selected.", "Label Information Issue");
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
+            return;
+        }
         protected override async void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             base.OnClosing(e);
-            await arenaAPI.LogoutAsync();
             loftwareAPI.ShutDownPrintEngine();
+            await arenaAPI.LogoutAsync();
         }
     }
 }

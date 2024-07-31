@@ -48,6 +48,8 @@ namespace AutoGenLabel
         private string GUID_colorFRN = "P7RAF5VU7ZGYH0FIDD2V";
         public string CatalogNumber { get; set; }
         private string GUID_catNumber = "N5P8D3TS5XEWFYDGF988";
+        public string MFGLocation {  get; set; }
+        private string GUID_mfgloc = "GYI16WMLYQ7P8R68PI7B";
         public Connector() { }
         public void ProcessItemInfo(JObject parsedResponse)
         {
@@ -71,7 +73,8 @@ namespace AutoGenLabel
                     { GUID_colorENG, value => ColorEnglish = value},
                     { GUID_colorSPN, value => ColorSpanish = value},
                     { GUID_colorFRN, value => ColorFrench = value},
-                    { GUID_catNumber, value => CatalogNumber = value}
+                    { GUID_catNumber, value => CatalogNumber = value},
+                    { GUID_mfgloc, value => MFGLocation = value}
                 };
                 var additionalAttributes = parsedResponse["additionalAttributes"] as JArray;
 
@@ -85,9 +88,9 @@ namespace AutoGenLabel
                         action(value);
                     }
                 }
-                if (CatalogNumber.Equals(string.Empty))
+                if (CatalogNumber == "")
                     CatalogNumber = parsedResponse["number"]?.ToString();
-                else if (CatalogDescriptionENG1.Equals(string.Empty))
+                else if (CatalogDescriptionENG1 == "" || CatalogDescriptionENG1 == null)
                     CatalogDescriptionENG1 = parsedResponse["name"]?.ToString();
             }
             catch(Exception ex)
@@ -97,30 +100,34 @@ namespace AutoGenLabel
 
             return;
         }
-        public ILabel SetLabelVariables(ILabel item_label)
+        public ILabel SetLabelVariables(ILabel item_label, string itemPN)
         {
-            item_label.Variables[0].SetValue(CatalogNumber);
-            item_label.Variables[1].SetValue(CatalogDescriptionENG1);
-            item_label.Variables[2].SetValue(CatalogDescriptionENG2);
-            item_label.Variables[3].SetValue(CatalogDescriptionSPN1);
-            item_label.Variables[4].SetValue(CatalogDescriptionSPN2);
-            item_label.Variables[5].SetValue(CatalogDescriptionFRN1);
-            item_label.Variables[6].SetValue(CatalogDescriptionFRN2);
-            item_label.Variables[7].SetValue(ColorEnglish);
-            item_label.Variables[8].SetValue(ColorSpanish);
-            item_label.Variables[9].SetValue(ColorFrench);
-            /*
-            item_label.Variables[10].SetValue(UnitUPC);
-            item_label.Variables[11].SetValue(IntermediateUPC);
-            item_label.Variables[12].SetValue();
-            item_label.Variables[13].SetValue();
-            item_label.Variables[14].SetValue();
-            item_label.Variables[15].SetValue();
-            item_label.Variables[16].SetValue(CountryOfOrigin);
-            item_label.Variables[17].SetValue();
-            item_label.Variables[18].SetValue();
-            */
+            EvaluateAttributes(item_label.Variables[0].SetValue, CatalogNumber, "");
+            EvaluateAttributes(item_label.Variables[1].SetValue, CatalogDescriptionENG1, "");
+            EvaluateAttributes(item_label.Variables[2].SetValue, CatalogDescriptionENG2, "");
+            EvaluateAttributes(item_label.Variables[3].SetValue, CatalogDescriptionSPN1, "");
+            EvaluateAttributes(item_label.Variables[4].SetValue, CatalogDescriptionSPN2, "");
+            EvaluateAttributes(item_label.Variables[5].SetValue, CatalogDescriptionFRN1, "");
+            EvaluateAttributes(item_label.Variables[6].SetValue, CatalogDescriptionFRN2, "");
+            EvaluateAttributes(item_label.Variables[7].SetValue, ColorEnglish, "");
+            EvaluateAttributes(item_label.Variables[8].SetValue, ColorSpanish, "");
+            EvaluateAttributes(item_label.Variables[9].SetValue, ColorFrench, "");
+            EvaluateAttributes(item_label.Variables[10].SetValue, UnitUPC, "");
+            EvaluateAttributes(item_label.Variables[11].SetValue, IntermediateUPC, "");
+            EvaluateAttributes(item_label.Variables[12].SetValue, IntermediateQuantity, "");
+            EvaluateAttributes(item_label.Variables[13].SetValue, ShipUPC, "");
+            EvaluateAttributes(item_label.Variables[14].SetValue, MasterCartonQty, "");
+            EvaluateAttributes(item_label.Variables[15].SetValue, BusinessUnit, "");
+            EvaluateAttributes(item_label.Variables[16].SetValue, CountryOfOrigin, "");
+            item_label.Variables[17].SetValue(itemPN);
+            item_label.Variables[18].SetValue("");
+            MFGLocation = MFGLocation == "Creation" ? "Vaughn ON" : "Carlsbad, CA";
+            EvaluateAttributes(item_label.Variables[19].SetValue, MFGLocation, "");
             return item_label;
+        }
+        private void EvaluateAttributes<T>(Action<T> setter, T value, T defaultValue)
+        {
+            setter(value != null ? value : defaultValue);
         }
         #region
             // Indexes
@@ -140,9 +147,10 @@ namespace AutoGenLabel
             // shipLabelUPC = 13
             // shipQuantity = 14
             // businessUnit = 15
-            // mfgLocation = 16
+            // countryOfOrigin = 16
             // labelItemPN = 17
             // imgSource = 18
+            // mfgLocation = 19
         #endregion
         ~Connector() { }
     }
