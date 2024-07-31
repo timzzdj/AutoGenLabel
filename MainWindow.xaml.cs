@@ -20,13 +20,13 @@ namespace AutoGenLabel
         Connector connector;
         LoftwareAPI loftwareAPI;
         private bool is_requestFinished = false;
-        private string destinationPath = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabelv1";
-        private string unitLabelPath = "C:\\Users\\dejesust\\source\\repos\\AutoGenLabelv1\\22092r2 Ship Label Format 5.00 x 3.50.nlbl";
-        private string unitLBLSize = "";
-        private string intrmdtLabelPath = "";
-        private string intrmdtLBLSize = "";
-        private string masterLabelPath = "";
-        private string masterLBLSize = "";
+        private string destinationPath = @"..\..\..\PDFs";
+        private string unitLabelPath = @"..\..\..\Labels";
+        private string intrmdtLabelPath = @"..\..\..\Labels";
+        private string masterLabelPath = @"..\..\..\Labels";
+        private string unitLBLSize;
+        private string intrmdtLBLSize;
+        private string masterLBLSize;
         #endregion
         public MainWindow()
         {
@@ -84,7 +84,8 @@ namespace AutoGenLabel
             List<string> items = new List<string>
             {
                 "N/A",
-                "Ship 5.00\" x 3.50\""
+                "Ship 5.00\" x 3.50\"",
+                "Ship 2.68\" x 2.00\""
             };
             Cmb_shipSize.ItemsSource = items;
             Cmb_shipSize.SelectedIndex = 0;

@@ -17,12 +17,27 @@ namespace AutoGenLabel
         private string GUID_unitUPC = "2K4NSI87KCTBUDSVSQK0";
         public string ShipUPC { get; set; }
         private string GUID_shipUPC = "4M6PUKA9MEVDWFUXUSM6";
+        public string IntermediateUPC { get; set; }
+        private string GUID_intUPC = "";
         public string BusinessUnit { get; set; }
         private string GUID_businessunit = "CUEX2SIHUM3L4N253I96";
         public string CountryOfOrigin { get; set; }
         private string GUID_COO = "P7RAF5VU7ZGYH0FIHBA3";
         public string MasterCartonQty { get; set; }
         private string GUID_masterqty = "CUEX2SIHUM3L4N2520VA";
+        public string CatalogDescriptionENG1 { get; set; }
+        private string GUID_catENG1 = "";
+        public string CatalogDescriptionENG2 { get; set; }
+        private string GUID_catENG2 = "";
+        public string CatalogDescriptionSPN1 {  get; set; }
+        private string GUID_catSPN1 = "";
+        public string CatalogDescriptionSPN2 {  get; set; }
+        private string GUID_catSPN2 = "";
+        public string CatalogDescriptionFRN1 { get; set; }
+        private string GUID_catFRN1 = "";
+        public string CatalogDescriptionFRN2 { get; set; }
+        private string GUID_catFRN2 = "";
+
         public string CatalogNumber { get; set; }
         public string CatalogDescription { get; set; }
         public Connector() { }
