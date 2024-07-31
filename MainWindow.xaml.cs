@@ -20,10 +20,10 @@ namespace AutoGenLabel
         Connector connector;
         LoftwareAPI loftwareAPI;
         private bool is_requestFinished = false;
-        private string destinationPath = @"..\..\..\PDFs";
-        private string unitLabelPath = @"..\..\..\Labels";
-        private string intrmdtLabelPath = @"..\..\..\Labels";
-        private string masterLabelPath = @"..\..\..\Labels";
+        private string destinationPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\PDFs");
+        private string unitLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels");
+        private string intrmdtLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels");
+        private string masterLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels");
         private string unitLBLSize;
         private string intrmdtLBLSize;
         private string masterLBLSize;
