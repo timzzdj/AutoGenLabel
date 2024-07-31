@@ -21,9 +21,9 @@ namespace AutoGenLabel
         LoftwareAPI loftwareAPI;
         private bool is_requestFinished = false;
         private string destinationPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\PDFs");
-        private string unitLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels");
-        private string intrmdtLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels");
-        private string masterLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels");
+        private string unitLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels\");
+        private string intrmdtLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels\");
+        private string masterLabelPath = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\Labels\");
         private string unitLBLSize;
         private string intrmdtLBLSize;
         private string masterLBLSize;
@@ -42,20 +42,45 @@ namespace AutoGenLabel
             PopulateIntermediateComboBox();
         }
 
-        private void Cmb_unitSize_SelectionChanged(object sender, SelectionChangedEventArgs selectEv)
+        private void Cmb_unitSize_SelectionChanged(object unitSender, SelectionChangedEventArgs selectEv)
         {
             try
             {
-                unitLBLSize = "";
-                if (Cmb_unitSize.SelectedItem != null)
+                ComboBox comboBox = unitSender as ComboBox;
+                switch(comboBox.SelectedIndex)
                 {
-                    string selectedItem = Cmb_unitSize.SelectedItem.ToString();
-                    unitLBLSize = selectedItem;
+                    case 0:
+                        unitLBLSize = unitLabelPath + "Unit Label Format 4.00 x 2.50.nlbl";
+                        break;
+                    case 1:
+                        unitLBLSize = unitLabelPath + "Unit Label Format 1.50 x 1.00.nlbl";
+                        break;
+                    case 2:
+                        unitLBLSize = unitLabelPath + "Unit Label Format 2.00 x 1.00.nlbl";
+                        break;
+                    case 3:
+                        unitLBLSize = unitLabelPath + "Unit Label Format 2.00 x 2.00.nlbl";
+                        break;
+                    case 4:
+                        unitLBLSize = unitLabelPath + "Unit Label Format 2.25 x 2.00.nlbl";
+                        break;
+                    case 5:
+                        unitLBLSize = unitLabelPath + "Unit Label Format 2.68 x 2.00.nlbl";
+                        break;
+                    case 6:
+                        unitLBLSize = unitLabelPath + "Unit Label Format 4.00 x 1.33.nlbl";
+                        break;
+                    case 7:
+                        unitLBLSize = unitLabelPath + "Unit Label Format 4.00 x 2.50.nlbl";
+                        break;
+                    case 8:
+                        unitLBLSize = unitLabelPath + "Unit Label Format 5.00 x 3.50.nlbl";
+                        break;
                 }
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show("Exception caught: " + ex.Message);
             }
         }
         private void PopulateUnitComboBox()
@@ -75,9 +100,28 @@ namespace AutoGenLabel
             Cmb_unitSize.ItemsSource = items;
             Cmb_unitSize.SelectedIndex = 0;
         }
-        private void Cmb_shipSize_SelectionChanged(object sender, SelectionChangedEventArgs selectEv)
+        private void Cmb_shipSize_SelectionChanged(object shipSender, SelectionChangedEventArgs selectEv)
         {
-
+            try
+            {
+                ComboBox comboBox = shipSender as ComboBox;
+                switch (comboBox.SelectedIndex)
+                {
+                    case 0:
+                        masterLBLSize = masterLabelPath + "";
+                        break;
+                    case 1:
+                        masterLBLSize = masterLabelPath + "";
+                        break;
+                    case 2:
+                        masterLBLSize = masterLabelPath + "Ship Label Format 2.68 x 2.00.nlbl";
+                        break;
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
         }
         private void PopulateShipComboBox()
         {
@@ -90,9 +134,36 @@ namespace AutoGenLabel
             Cmb_shipSize.ItemsSource = items;
             Cmb_shipSize.SelectedIndex = 0;
         }
-        private void Cmb_intermediateSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Cmb_intermediateSize_SelectionChanged(object intSender, SelectionChangedEventArgs e)
         {
-
+            try
+            {
+                ComboBox comboBox = intSender as ComboBox;
+                switch (comboBox.SelectedIndex)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        intrmdtLBLSize = intrmdtLabelPath + "Inr Label Format 2.68 x 2.00.nlbl";
+                        break;
+                    case 2:
+                        intrmdtLBLSize = intrmdtLabelPath + "";
+                        break;
+                    case 3:
+                        intrmdtLBLSize = intrmdtLabelPath + "Inr Label Format 4.00 x 2.50.nlbl";
+                        break;
+                    case 4:
+                        intrmdtLBLSize = intrmdtLabelPath + "";
+                        break;
+                    case 5:
+                        intrmdtLBLSize = intrmdtLabelPath + "Inr Label Format 5.00 x 3.50.nlbl";
+                        break;
+                }
+            }
+            catch( Exception ex )
+            {
+                MessageBox.Show("Exception caught: " + ex.Message);
+            }
         }
         private void PopulateIntermediateComboBox()
         {
