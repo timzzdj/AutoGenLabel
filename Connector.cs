@@ -82,8 +82,23 @@ namespace AutoGenLabel
             // Indexes
             // catalogNumber = 0
             // descriptionLine1ENG = 1
-            // shipLabelUPC = 9
-            // shipQuantity = 10
+            // descriptionLine2ENG = 2
+            // descriptionLine1SPN = 3
+            // descriptionLine2SPN = 4
+            // descriptionLine1FRN = 5
+            // descriptionLine2FRN = 6
+            // colorENG = 7
+            // colorSPN = 8
+            // colorFRN = 9
+            // unitLabelUPC = 10
+            // intLabelUPC = 11
+            // intQuantity = 12
+            // shipLabelUPC = 13
+            // shipQuantity = 14
+            // businessUnit = 15
+            // mfgLocation = 16
+            // labelItemPN = 17
+            // imgSource = 18
         #endregion
         ~Connector() { }
     }
