@@ -145,20 +145,15 @@ namespace AutoGenLabel
                 switch (comboBox.SelectedIndex)
                 {
                     case 0:
+                        intrmdtLBLSize = intrmdtLabelPath + "Inr Label Format 4.00 x 2.50.nlbl";
                         break;
                     case 1:
                         intrmdtLBLSize = intrmdtLabelPath + "Inr Label Format 2.68 x 2.00.nlbl";
                         break;
                     case 2:
-                        intrmdtLBLSize = intrmdtLabelPath + "";
-                        break;
-                    case 3:
                         intrmdtLBLSize = intrmdtLabelPath + "Inr Label Format 4.00 x 2.50.nlbl";
                         break;
-                    case 4:
-                        intrmdtLBLSize = intrmdtLabelPath + "";
-                        break;
-                    case 5:
+                    case 3:
                         intrmdtLBLSize = intrmdtLabelPath + "Inr Label Format 5.00 x 3.50.nlbl";
                         break;
                 }
@@ -174,9 +169,7 @@ namespace AutoGenLabel
             {
                 "N/A",
                 "Inr 2.68\" x 2.00\"",
-                "Inr 2.75\" x 2.75\"",
                 "Inr 4.00\" x 2.50\"",
-                "Inr 4.00\" x 3.00\"",
                 "Inr 5.00\" x 3.50\""
             };
             Cmb_intermediateSize.ItemsSource = items;
@@ -243,11 +236,11 @@ namespace AutoGenLabel
             }
             return;
         }
-        public async void PrintLabel(string itemPN)
+        public async void PrintLabel(string itemPN, string lblPath)
         {
             try
             {
-                loftwareAPI.PrintLabels(connector, destinationPath, itemPN);
+                loftwareAPI.PrintLabels(connector, destinationPath, itemPN, lblPath);
                 await Task.Delay(3000);
             }
             catch (Exception ex)
@@ -284,8 +277,9 @@ namespace AutoGenLabel
                 if (Cmb_unitSize.SelectedIndex != 0 && unitLBLPN != "")
                 {
                     GetLabelTemplate(unitLBLSize);
-                    PrintLabel(unitLBLPN);
+                    PrintLabel(txt_itemNumberUnit.Text, unitLBLPN);
                 }
+                unitLBLPN = "LABEL_UNIT_";
             }
             catch(Exception ex)
             {
@@ -300,8 +294,9 @@ namespace AutoGenLabel
                 if (Cmb_intermediateSize.SelectedIndex != 0 && intLBLPN != "")
                 {
                     GetLabelTemplate(intrmdtLBLSize);
-                    PrintLabel(intLBLPN);
+                    PrintLabel(txt_itemNumberIntermediate.Text, intLBLPN);
                 }
+                intLBLPN = "LABEL_INNER_";
             }
             catch(Exception ex)
             {
@@ -316,8 +311,9 @@ namespace AutoGenLabel
                 if (Cmb_shipSize.SelectedIndex != 0 && shipLBLPN != "")
                 {
                     GetLabelTemplate(masterLBLSize);
-                    PrintLabel(shipLBLPN);
+                    PrintLabel(txt_itemNumberShip.Text, shipLBLPN);
                 }
+                shipLBLPN = "LABEL_SHIP_";
             }
             catch(Exception ex)
             {

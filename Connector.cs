@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 using NiceLabel.SDK;
 using System.Windows;
+using System.Net;
 
 namespace AutoGenLabel
 {
@@ -49,7 +50,213 @@ namespace AutoGenLabel
         public string CatalogNumber { get; set; }
         private string GUID_catNumber = "N5P8D3TS5XEWFYDGF988";
         public string MFGLocation {  get; set; }
+        public string tempLocation { get; set; }
         private string GUID_mfgloc = "GYI16WMLYQ7P8R68PI7B";
+        private static readonly Dictionary<string, string> COO_Association = new Dictionary<string, string>()
+        {
+            { "AF", "Afghanistan" },
+            { "AL", "Albania" },
+            { "DZ", "Algeria" },
+            { "AS", "American Samoa" },
+            { "AD", "Andorra" },
+            { "AO", "Angola" },
+            { "AI", "Anguilla" },
+            { "AQ", "Antarctica" },
+            { "AG", "Antigua and Barbuda" },
+            { "AR", "Argentina" },
+            { "AM", "Armenia" },
+            { "AW", "Aruba" },
+            { "AU", "Australia" },
+            { "AT", "Austria" },
+            { "AZ", "Azerbaijan" },
+            { "BS", "Bahamas" },
+            { "BH", "Bahrain" },
+            { "BD", "Bangladesh" },
+            { "BB", "Barbados" },
+            { "BY", "Belarus" },
+            { "BE", "Belgium" },
+            { "BZ", "Belize" },
+            { "BJ", "Benin" },
+            { "BM", "Bermuda" },
+            { "BT", "Bhutan" },
+            { "BO", "Bolivia" },
+            { "BA", "Bosnia and Herzegovina" },
+            { "BW", "Botswana" },
+            { "BR", "Brazil" },
+            { "BN", "Brunei Darussalam" },
+            { "BG", "Bulgaria" },
+            { "BF", "Burkina Faso" },
+            { "BI", "Burundi" },
+            { "KH", "Cambodia" },
+            { "CM", "Cameroon" },
+            { "CA", "Canada" },
+            { "CV", "Cape Verde" },
+            { "KY", "Cayman Islands" },
+            { "CF", "Central African Republic" },
+            { "TD", "Chad" },
+            { "CL", "Chile" },
+            { "CN", "China" },
+            { "CO", "Colombia" },
+            { "KM", "Comoros" },
+            { "CG", "Congo" },
+            { "CD", "Congo, Democratic Republic of the" },
+            { "CR", "Costa Rica" },
+            { "HR", "Croatia" },
+            { "CU", "Cuba" },
+            { "CY", "Cyprus" },
+            { "CZ", "Czech Republic" },
+            { "DK", "Denmark" },
+            { "DJ", "Djibouti" },
+            { "DM", "Dominica" },
+            { "DO", "Dominican Republic" },
+            { "EC", "Ecuador" },
+            { "EG", "Egypt" },
+            { "SV", "El Salvador" },
+            { "GQ", "Equatorial Guinea" },
+            { "ER", "Eritrea" },
+            { "EE", "Estonia" },
+            { "ET", "Ethiopia" },
+            { "FJ", "Fiji" },
+            { "FI", "Finland" },
+            { "FR", "France" },
+            { "GA", "Gabon" },
+            { "GM", "Gambia" },
+            { "GE", "Georgia" },
+            { "DE", "Germany" },
+            { "GH", "Ghana" },
+            { "GR", "Greece" },
+            { "GD", "Grenada" },
+            { "GU", "Guam" },
+            { "GT", "Guatemala" },
+            { "GN", "Guinea" },
+            { "GW", "Guinea-Bissau" },
+            { "GY", "Guyana" },
+            { "HT", "Haiti" },
+            { "HN", "Honduras" },
+            { "HK", "Hong Kong" },
+            { "HU", "Hungary" },
+            { "IS", "Iceland" },
+            { "IN", "India" },
+            { "ID", "Indonesia" },
+            { "IR", "Iran" },
+            { "IQ", "Iraq" },
+            { "IE", "Ireland" },
+            { "IL", "Israel" },
+            { "IT", "Italy" },
+            { "JM", "Jamaica" },
+            { "JP", "Japan" },
+            { "JO", "Jordan" },
+            { "KZ", "Kazakhstan" },
+            { "KE", "Kenya" },
+            { "KI", "Kiribati" },
+            { "KP", "Korea, Democratic People's Republic of" },
+            { "KR", "Korea, Republic of" },
+            { "KW", "Kuwait" },
+            { "KG", "Kyrgyzstan" },
+            { "LA", "Lao People's Democratic Republic" },
+            { "LV", "Latvia" },
+            { "LB", "Lebanon" },
+            { "LS", "Lesotho" },
+            { "LR", "Liberia" },
+            { "LY", "Libya" },
+            { "LI", "Liechtenstein" },
+            { "LT", "Lithuania" },
+            { "LU", "Luxembourg" },
+            { "MO", "Macao" },
+            { "MK", "Macedonia" },
+            { "MG", "Madagascar" },
+            { "MW", "Malawi" },
+            { "MY", "Malaysia" },
+            { "MV", "Maldives" },
+            { "ML", "Mali" },
+            { "MT", "Malta" },
+            { "MH", "Marshall Islands" },
+            { "MR", "Mauritania" },
+            { "MU", "Mauritius" },
+            { "MX", "Mexico" },
+            { "FM", "Micronesia, Federated States of" },
+            { "MD", "Moldova" },
+            { "MC", "Monaco" },
+            { "MN", "Mongolia" },
+            { "ME", "Montenegro" },
+            { "MS", "Montserrat" },
+            { "MA", "Morocco" },
+            { "MZ", "Mozambique" },
+            { "MM", "Myanmar" },
+            { "NA", "Namibia" },
+            { "NR", "Nauru" },
+            { "NP", "Nepal" },
+            { "NL", "Netherlands" },
+            { "NZ", "New Zealand" },
+            { "NI", "Nicaragua" },
+            { "NE", "Niger" },
+            { "NG", "Nigeria" },
+            { "NO", "Norway" },
+            { "OM", "Oman" },
+            { "PK", "Pakistan" },
+            { "PW", "Palau" },
+            { "PA", "Panama" },
+            { "PG", "Papua New Guinea" },
+            { "PY", "Paraguay" },
+            { "PE", "Peru" },
+            { "PH", "Philippines" },
+            { "PL", "Poland" },
+            { "PT", "Portugal" },
+            { "PR", "Puerto Rico" },
+            { "QA", "Qatar" },
+            { "RO", "Romania" },
+            { "RU", "Russian Federation" },
+            { "RW", "Rwanda" },
+            { "KN", "Saint Kitts and Nevis" },
+            { "LC", "Saint Lucia" },
+            { "VC", "Saint Vincent and the Grenadines" },
+            { "WS", "Samoa" },
+            { "SM", "San Marino" },
+            { "ST", "Sao Tome and Principe" },
+            { "SA", "Saudi Arabia" },
+            { "SN", "Senegal" },
+            { "RS", "Serbia" },
+            { "SC", "Seychelles" },
+            { "SL", "Sierra Leone" },
+            { "SG", "Singapore" },
+            { "SK", "Slovakia" },
+            { "SI", "Slovenia" },
+            { "SB", "Solomon Islands" },
+            { "SO", "Somalia" },
+            { "ZA", "South Africa" },
+            { "ES", "Spain" },
+            { "LK", "Sri Lanka" },
+            { "SD", "Sudan" },
+            { "SR", "Suriname" },
+            { "SZ", "Swaziland" },
+            { "SE", "Sweden" },
+            { "CH", "Switzerland" },
+            { "SY", "Syrian Arab Republic" },
+            { "TW", "Taiwan" },
+            { "TJ", "Tajikistan" },
+            { "TZ", "Tanzania" },
+            { "TH", "Thailand" },
+            { "TL", "Timor-Leste" },
+            { "TG", "Togo" },
+            { "TO", "Tonga" },
+            { "TT", "Trinidad and Tobago" },
+            { "TN", "Tunisia" },
+            { "TR", "Turkey" },
+            { "TM", "Turkmenistan" },
+            { "UG", "Uganda" },
+            { "UA", "Ukraine" },
+            { "AE", "United Arab Emirates" },
+            { "GB", "United Kingdom" },
+            { "US", "United States" },
+            { "UY", "Uruguay" },
+            { "UZ", "Uzbekistan" },
+            { "VU", "Vanuatu" },
+            { "VE", "Venezuela" },
+            { "VN", "Viet Nam" },
+            { "YE", "Yemen" },
+            { "ZM", "Zambia" },
+            { "ZW", "Zimbabwe" }
+        };
         public Connector() { }
         public void ProcessItemInfo(JObject parsedResponse)
         {
@@ -74,7 +281,7 @@ namespace AutoGenLabel
                     { GUID_colorSPN, value => ColorSpanish = value},
                     { GUID_colorFRN, value => ColorFrench = value},
                     { GUID_catNumber, value => CatalogNumber = value},
-                    { GUID_mfgloc, value => MFGLocation = value}
+                    { GUID_mfgloc, value => MFGLocation = value},
                 };
                 var additionalAttributes = parsedResponse["additionalAttributes"] as JArray;
 
@@ -92,6 +299,8 @@ namespace AutoGenLabel
                     CatalogNumber = parsedResponse["number"]?.ToString();
                 else if (CatalogDescriptionENG1 == "" || CatalogDescriptionENG1 == null)
                     CatalogDescriptionENG1 = parsedResponse["name"]?.ToString();
+                else if (MFGLocation != null || MFGLocation != "")
+                    tempLocation = MFGLocation;
             }
             catch(Exception ex)
             {
@@ -118,10 +327,10 @@ namespace AutoGenLabel
             EvaluateAttributes(item_label.Variables[13].SetValue, ShipUPC, "");
             EvaluateAttributes(item_label.Variables[14].SetValue, MasterCartonQty, "");
             EvaluateAttributes(item_label.Variables[15].SetValue, BusinessUnit, "");
-            EvaluateAttributes(item_label.Variables[16].SetValue, CountryOfOrigin, "");
+            EvaluateCOO(item_label.Variables[16].SetValue, CountryOfOrigin);
             item_label.Variables[17].SetValue(itemPN);
             item_label.Variables[18].SetValue("");
-            MFGLocation = MFGLocation == "Creation" ? "Vaughn ON" : "Carlsbad, CA";
+            MFGLocation = MFGLocation == "Creation" ? "Vaughan ON" : "Carlsbad, CA";
             EvaluateAttributes(item_label.Variables[19].SetValue, MFGLocation, "");
             return item_label;
         }
@@ -129,6 +338,14 @@ namespace AutoGenLabel
         {
             setter(value != null ? value : defaultValue);
         }
+        private void EvaluateCOO(Action<string> setter, string countryCode)
+        {
+            if (COO_Association.TryGetValue(countryCode, out var countryName))
+                setter($"Made in {countryName}");
+            else
+                setter($"Made in USA");
+        }
+        // Label Variable Index Mapping
         #region
             // Indexes
             // catalogNumber = 0

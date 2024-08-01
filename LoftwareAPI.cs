@@ -48,7 +48,7 @@ namespace AutoGenLabel
             }
             return new_label;
         }
-        public void PrintLabels(Connector connector, string destination_path, string itemPN)
+        public void PrintLabels(Connector connector, string destination_path, string itemPN, string lblPath)
         {
             new_label = connector.SetLabelVariables(new_label, itemPN);
 
@@ -57,9 +57,10 @@ namespace AutoGenLabel
             
             print_settings.PrinterName = "Microsoft Print to PDF";
             print_settings.PrintToPdf = true;
-            print_settings.OutputFileName = $"{destination_path}{itemPN}_{connector.CatalogNumber}.pdf";
+            print_settings.OutputFileName = $"{destination_path}{lblPath}_{connector.CatalogNumber}.pdf";
 
             new_label.Print(1);
+            connector.MFGLocation = connector.tempLocation;
         }
         public void OpenTraceFile()
         {
