@@ -26,7 +26,7 @@ namespace AutoGenLabel
         {
             try
             {
-                var line = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), @"ArenaLogin\"));
+                var line = File.ReadAllLines(Path.Combine(Directory.GetCurrentDirectory(), @"ArenaLogin\ArenaCredentialsLogin.txt"));
                 if (line.Length >= 2)
                 {
                     email = line[0];
