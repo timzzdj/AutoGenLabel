@@ -15,6 +15,7 @@ namespace AutoGenLabel
     public class Connector
     {
         /* GUIDs from BSC Workspace */
+        #region
         public string UnitUPC { get; set; }
         private string GUID_unitUPC = "2K4NSI87KCTBUDSVSQK0";
         public string ShipUPC { get; set; }
@@ -52,8 +53,11 @@ namespace AutoGenLabel
         public string MFGLocation {  get; set; }
         public string tempLocation { get; set; }
         private string GUID_mfgloc = "GYI16WMLYQ7P8R68PI7B";
+        #endregion
+        /* Country Code Library */
         private static readonly Dictionary<string, string> COO_Association = new Dictionary<string, string>()
         {
+        #region
             { "AF", "Afghanistan" },
             { "AL", "Albania" },
             { "DZ", "Algeria" },
@@ -256,6 +260,7 @@ namespace AutoGenLabel
             { "YE", "Yemen" },
             { "ZM", "Zambia" },
             { "ZW", "Zimbabwe" }
+#endregion
         };
         public Connector() { }
         public void ProcessItemInfo(JObject parsedResponse)
